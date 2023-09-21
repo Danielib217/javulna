@@ -5,7 +5,7 @@ pipeline {
         maven 'Maven3'
     }
     environment {
-            APP_NAME = "register-app-pipeline"
+            APP_NAME = "javulna-pipeline"
             RELEASE = "1.0.0"
             DOCKER_USER = "daniel217x"
             DOCKER_PASS = 'dockerhub'
@@ -24,13 +24,13 @@ pipeline {
 
         stage("Checkout from SCM") {
                steps {
-                   git branch: 'main', credentialsId: 'github', url: 'https://github.com/Danielib217/Registration-app'
+                   git branch: 'master', credentialsId: 'github', url: 'https://github.com/Danielib217/javulna'
                }
         }
 
       stage("Build Application") {
                steps {
-                   sh "mvn clean package"
+                   sh "mvn clean install"
                }
         }
 
@@ -67,7 +67,7 @@ pipeline {
         stage("Trivy Scan"){
             steps{
                 script{
-                    sh('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image daniel217x/register-app-pipeline:latest --no-progress --scanners vuln --exit-code 0 --severity HIGH,CRITICAL --format table')
+                    sh('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image daniel217x/javulna-pipeline:latest --no-progress --scanners vuln --exit-code 0 --severity HIGH,CRITICAL --format table')
                 }
             }
         }
